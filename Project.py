@@ -14,17 +14,22 @@ f.close()
 
 L = len(player)
 
+columns = ['Skill', 'Country', 'Region', 'City']
+df = pd.DataFrame(index=player, columns=columns)
+
 for x in range(0, L):
     r = requests.get('http://smashranking.eu/api/smashers/%s/' % player[x])
 
     if r.status_code == 404:
-        print "Responses has status 404, printing player tag:", player[x]
-        output_file = open("404 output.txt", "a")
-        output_file.write('%s \n' % player[x])
-        output_file.close()
-        trueskill_file = open("trueskill.txt", "a")
-        trueskill_file.write('%s is a new player/retagged player \n' % player[x])
-        trueskill_file.close()
+#        print "Responses has status 404, printing player tag:", player[x]
+#        output_file = open("404 output.txt", "a")
+#        output_file.write('%s \n' % player[x])
+#        output_file.close()
+#        trueskill_file = open("trueskill.txt", "a")
+#        trueskill_file.write('%s is a new player/retagged player \n' % player[x])
+#        trueskill_file.close()
+        df.loc[player[x]] = pd.Series({'Skill' :0, 'Country' :0, 'Region' :0, 'City' :0})
+        
     else:
 #        print "Response was successful, printing player info:"
         metric = r.json()
@@ -34,13 +39,19 @@ for x in range(0, L):
         country = metric["country"]
         region = metric["region"]
         city = metric["city"]
+        skill = mu - (1.5 * sigma)
         
-        trueskill_file = open("trueskill.txt", "a")
-        trueskill_file.write('%s            ' % player[x])
-        trueskill_file.write('%f            ' % mu)
-        trueskill_file.write('%f            ' % sigma)
-        trueskill_file.write('%s            ' % country)
-        trueskill_file.write('%s            ' % region)
-        trueskill_file.write('%s            \n' % city)     
-        trueskill_file.close()
+        df.loc[player[x]] = pd.Series({'Skill' :skill, 'Country' :country, 'Region' :region, 'City' :city})
+        
+#        trueskill_file = open("trueskill.txt", "a")
+#        trueskill_file.write('%s            ' % player[x])
+#        trueskill_file.write('%f            ' % mu)
+#        trueskill_file.write('%f            ' % sigma)
+#        trueskill_file.write('%s            ' % country)
+#        trueskill_file.write('%s            ' % region)
+#        trueskill_file.write('%s            \n' % city)     
+#        trueskill_file.close()
 #        print player[x],mu,sigma,country,region,city
+
+order = df.sort_values(by=skill)
+print order
