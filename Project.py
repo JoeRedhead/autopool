@@ -33,13 +33,15 @@ for x in range(0, L):
     else:
 #        print "Response was successful, printing player info:"
         metric = r.json()
-
+        
+        listplayer = player[x]
         mu = metric["mu"]
         sigma = metric["sigma"]
         country = metric["country"]
         region = metric["region"]
         city = metric["city"]
         skill = mu - (1.5 * sigma)
+
         
         df.loc[player[x]] = pd.Series({'Skill' :skill, 'Country' :country, 'Region' :region, 'City' :city})
         
@@ -53,5 +55,12 @@ for x in range(0, L):
 #        trueskill_file.close()
 #        print player[x],mu,sigma,country,region,city
 
-order = df.sort_values(by=skill)
-print order
+order = df.sort(['Skill'], ascending = [False])
+#print order
+
+p = int(input("Enter number of pools: "))
+what = float(L) / float(p)
+N = np.ceil(what)
+
+print L
+print N
