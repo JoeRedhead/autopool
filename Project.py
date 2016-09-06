@@ -55,12 +55,33 @@ for x in range(0, L):
 #        trueskill_file.close()
 #        print player[x],mu,sigma,country,region,city
 
-order = df.sort(['Skill'], ascending = [False])
+order = df.sort_values(['Skill'], ascending = [False])
 #print order
 
-p = int(input("Enter number of pools: "))
-what = float(L) / float(p)
+pool = int(input("Enter number of pools: "))
+what = float(L) / float(pool)
 N = np.ceil(what)
 
-print L
-print N
+#print L
+#print N
+
+#print order.iloc[1].name
+
+z = 0
+lists = [[] for _ in range(pool)]
+
+for y in range (0,L):
+    if (np.floor(float(y)/float(pool))%2 == 0): 
+        lists[z].append(order.iloc[y].name)
+        z = z + 1 
+    else:
+        z = z - 1
+        lists[z].append(order.iloc[y].name)
+
+#lists[1].append('Professor Pro')
+#lists[1].append('Steve') 
+print lists
+
+#Pools = np.zeros(pool, N)
+#Pools[1][1] = 'Professor Pro'
+#print Pools
