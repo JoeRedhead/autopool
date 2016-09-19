@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 #from bs4 import BeautifulSoup as BS
 
 f = open('Kickstart 10 entrants.txt', 'r+')
@@ -14,7 +14,7 @@ f.close()
 
 L = len(player)
 
-columns = ['Skill', 'Country', 'Region', 'City']
+columns = ['Skill', 'Country', 'Region', 'City', 'Pool']
 df = pd.DataFrame(index=player, columns=columns)
 
 for x in range(0, L):
@@ -67,16 +67,22 @@ N = np.ceil(what)
 
 #print order.iloc[1].name
 
-z = 0
+
 lists = [[] for _ in range(pool)]
 
-for y in range (0,L):
-    if (np.floor(float(y)/float(pool))%2 == 0): 
-        lists[z].append(order.iloc[y].name)
-        z = z + 1 
-    else:
-        z = z - 1
-        lists[z].append(order.iloc[y].name)
+def poolassign(PlayerTotal, PoolSize, Dataframe):               #def poolassign(int, int, dataframe)
+    z = 0
+    for y in range (0,PlayerTotal):
+        if (np.floor(float(y)/float(PoolSize))%2 == 0): 
+            lists[z].append(Dataframe.iloc[y].name)
+#            Dataframe.iloc[y].Pool
+            z = z + 1 
+        else:
+            z = z - 1
+            lists[z].append(Dataframe.iloc[y].name)
+    return
+    
+poolassign(L, pool, order)
 
 #lists[1].append('Professor Pro')
 #lists[1].append('Steve') 
